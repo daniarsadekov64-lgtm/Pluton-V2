@@ -1,0 +1,56 @@
+import os
+import random
+import string
+
+# === НАСТРОЙКИ ВАШЕГО GITHUB ===
+USERNAME = "daniarsadekov64-lgtm"       # Ваш ник со скриншота
+REPO = "Pluton-V2"                     # Название вашего репозитория
+BRANCH = "main"                         # Ветка (если у вас master, замените на "master")
+TOTAL_STEPS = 25                        # Количество шагов цепочки
+
+# === ВАШ НАСТОЯЩИЙ СКРИПТ ROBLOX ===
+# Сюда впишите код, который должен выполниться в самом конце
+CORE_SCRIPT = """
+print("====================================")
+print("Защита Pluton-V2 успешно пройдена!")
+print("Ваш основной скрипт запущен.")
+print("====================================")
+"""
+
+# ===================================================
+
+output_dir = "chain_files"
+os.makedirs(output_dir, exist_ok=True)
+
+# Функция для генерации случайного имени файла (чтобы запутать взломщика)
+def generate_random_name():
+    return ''.join(random.choices(string.ascii_lowercase + string.digits, k=10)) + ".lua"
+
+# Создаем финальный файл
+final_filename = "final_core.lua"
+with open(os.path.join(output_dir, final_filename), "w", encoding="utf-8") as f:
+    f.write(CORE_SCRIPT)
+
+base_url = f"https://githubusercontent.com{USERNAME}/{REPO}/{BRANCH}/{output_dir}"
+next_target_url = f"{base_url}/{final_filename}"
+
+# Генерируем цепочку случайных файлов
+for step in range(TOTAL_STEPS, 0, -1):
+    step_code = f'loadstring(game:HttpGet("{next_target_url}"))()'
+    
+    # Для первого шага оставляем фиксированное имя, чтобы вам было удобно его запускать.
+    # Остальные шаги получат случайные имена.
+    filename = "start_chain.lua" if step == 1 else generate_random_name()
+    
+    with open(os.path.join(output_dir, filename), "w", encoding="utf-8") as f:
+        f.write(step_code)
+    
+    next_target_url = f"{base_url}/{filename}"
+
+print("\n[УСПЕШНО] Все файлы сгенерированы в папке 'chain_files'!")
+print("-" * 60)
+print("ЧТО ДЕЛАТЬ ДАЛЬШЕ:")
+print(f"1. Загрузите созданную папку 'chain_files' в ваш репозиторий '{REPO}'.")
+print("2. Для запуска скрипта в Roblox используйте команду ниже:\n")
+print(f'loadstring(game:HttpGet("{next_target_url}"))()')
+print("-" * 60)

